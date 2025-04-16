@@ -1,0 +1,20 @@
+CREATE TABLE raw_games (
+    AppID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Release_date DATE,
+    Developer VARCHAR(255),
+    Publisher VARCHAR(255),
+    Price DECIMAL(10,2),
+    initial_price DECIMAL(10,2),
+    discount DECIMAL(10,2),
+    Estimated_owners VARCHAR(50),
+    Peak_CCU INT,
+    Positive INT,
+    Negative INT,
+    Metacritic_score INT,
+    steamspy_positive INT,
+    steamspy_negative INT,
+    Average_playtime_forever INT,
+    Genres TEXT,
+    Recommendations INT
+);
