@@ -1,6 +1,6 @@
 CREATE TABLE raw_games (
     AppID INT PRIMARY KEY,
-    Name VARCHAR(255),
+    Name VARCHAR(512),
     Release_date DATE,
     Developer VARCHAR(255),
     Publisher VARCHAR(255),

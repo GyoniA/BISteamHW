@@ -430,11 +430,66 @@
     <created_date>2025/04/16 14:19:14.587</created_date>
     <modified_user>-</modified_user>
     <modified_date>2025/04/16 14:19:14.587</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
+  <connection>
+    <name>MySQL Steam Database</name>
+    <server>localhost</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>PKK65QSteam</database>
+    <port>3306</port>
+    <username>root</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce10cc9da0ce</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>3306</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>STREAM_RESULTS</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
       <from>Games CSV file input</from>
@@ -467,12 +522,12 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Steamspy CSV file input</from>
-      <to>Select useful columns 4</to>
+      <from>Select useful columns</from>
+      <to>Parse Date JavaScript</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select useful columns</from>
+      <from>Parse Date JavaScript</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
@@ -489,6 +544,16 @@
     <hop>
       <from>Select useful columns 4</from>
       <to>Table output 4</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Steamspy CSV file input</from>
+      <to>Filter out incorrect rows 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter out incorrect rows 2</from>
+      <to>Select useful columns 4</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -549,7 +614,7 @@
         <group>,</group>
         <length>12</length>
         <precision>-1</precision>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
       </field>
       <field>
         <name>Estimated owners</name>
@@ -974,6 +1039,244 @@
     </GUI>
   </step>
   <step>
+    <name>Filter out free games</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select useful columns</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>Price</leftvalue>
+        <function>&lt;></function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>Number</type>
+          <text>0.0</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask>####0.0#########;-####0.0#########</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter out free games and apps</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select useful columns 2</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>type</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>game</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>is_free</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Boolean</type>
+              <text>N</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>app_id</leftvalue>
+            <function>&gt;</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>-1</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter out incorrect rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select useful columns 3</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>app_id</leftvalue>
+            <function>REGEXP</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>^[0-9]*$</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>review_score</leftvalue>
+            <function>REGEXP</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>^[0-9]*$</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>metacritic_score</leftvalue>
+            <function>REGEXP</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>^[0-9]*$</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>recommendations</leftvalue>
+            <function>REGEXP</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>^[0-9]*$</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>steamspy_user_score</leftvalue>
+            <function>REGEXP</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>^[0-9]*$</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Games CSV file input</name>
     <type>CsvInput</type>
     <description/>
@@ -1092,8 +1395,8 @@
     </GUI>
   </step>
   <step>
-    <name>Filter out free games and apps</name>
-    <type>FilterRows</type>
+    <name>Parse Date JavaScript</name>
+    <type>ScriptValueMod</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1102,101 +1405,37 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Select useful columns 2</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>type</leftvalue>
-            <function>=</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>game</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>is_free</leftvalue>
-            <function>=</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>Boolean</type>
-              <text>N</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>app_id</leftvalue>
-            <function>&gt;</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>Integer</type>
-              <text>-1</text>
-              <length>-1</length>
-              <precision>0</precision>
-              <isnull>N</isnull>
-              <mask>####0;-####0</mask>
-            </value>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>272</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select useful columns 2</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>
+      <jsScript>
+        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>var date_str = ReleaseDate.trim();
+var parsed_date = null;
+
+if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
+  // Format: MMM dd, yyyy
+  parsed_date = str2date(date_str, "MMM dd, yyyy");
+} else if (date_str.match(/^[A-Za-z]{3} \d{4}$/)) {
+  // Format: MMM yyyy → default to day 1
+  parsed_date = str2date(date_str + " 01", "MMM yyyy dd");
+} else {
+  // If unrecognized — leave null or handle it
+  parsed_date = null;
+}
+</jsScript_script>
+      </jsScript>
+    </jsScripts>
     <fields>
       <field>
-        <name>app_id</name>
-        <rename/>
+        <name>parsed_date</name>
+        <rename>parsed_date</rename>
+        <type>Date</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
       </field>
-      <field>
-        <name>name</name>
-        <rename/>
-      </field>
-      <field>
-        <name>languages</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -1207,191 +1446,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>240</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter out free games</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Select useful columns</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>Price</leftvalue>
-        <function>&lt;></function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>Number</type>
-          <text>0.0</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask>####0.0#########;-####0.0#########</mask>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>272</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select useful columns</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>AppID</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Name</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Release date</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Estimated owners</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Peak CCU</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Required age</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Price</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Discount</name>
-        <rename/>
-      </field>
-      <field>
-        <name>DLC count</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Header image</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Windows</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Mac</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Linux</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Metacritic score</name>
-        <rename/>
-      </field>
-      <field>
-        <name>User score</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Positive</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Negative</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Achievements</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Recommendations</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Average playtime forever</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Average playtime two weeks</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Median playtime forever</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Median playtime two weeks</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Developers</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Publishers</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Categories</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Genres</name>
-        <rename/>
-      </field>
-      <field>
-        <name>Tags</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
+      <xloc>640</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1581,8 +1636,8 @@
     </GUI>
   </step>
   <step>
-    <name>Filter out incorrect rows</name>
-    <type>FilterRows</type>
+    <name>Select useful columns</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1591,94 +1646,113 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Select useful columns 3</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <conditions>
-          <condition>
-            <negated>N</negated>
-            <leftvalue>app_id</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>review_score</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>metacritic_score</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>recommendations</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>steamspy_user_score</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-        </conditions>
-      </condition>
-    </compare>
+    <fields>
+      <field>
+        <name>AppID</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Name</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Release date</name>
+        <rename>ReleaseDate</rename>
+      </field>
+      <field>
+        <name>Estimated owners</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Peak CCU</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Required age</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Price</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Discount</name>
+        <rename/>
+      </field>
+      <field>
+        <name>DLC count</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Header image</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Windows</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Mac</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Linux</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Metacritic score</name>
+        <rename/>
+      </field>
+      <field>
+        <name>User score</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Positive</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Negative</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Achievements</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Recommendations</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Average playtime forever</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Average playtime two weeks</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Median playtime forever</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Median playtime two weeks</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Categories</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Genres</name>
+        <rename/>
+      </field>
+      <field>
+        <name>Tags</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1688,8 +1762,45 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>272</xloc>
-      <yloc>352</yloc>
+      <xloc>480</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select useful columns 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>app_id</name>
+      </field>
+      <field>
+        <name>name</name>
+      </field>
+      <field>
+        <name>languages</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1730,10 +1841,6 @@
         <rename/>
       </field>
       <field>
-        <name>steamspy_score_rank</name>
-        <rename/>
-      </field>
-      <field>
         <name>steamspy_positive</name>
         <rename/>
       </field>
@@ -1754,6 +1861,71 @@
     <GUI>
       <xloc>480</xloc>
       <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Select useful columns 4</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>app_id</name>
+        <rename/>
+      </field>
+      <field>
+        <name>price</name>
+        <rename/>
+      </field>
+      <field>
+        <name>initial_price</name>
+        <rename/>
+      </field>
+      <field>
+        <name>discount</name>
+        <rename/>
+      </field>
+      <field>
+        <name>genres</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>price</name>
+        <rename>price</rename>
+        <type>Integer</type>
+        <length>15</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
+      <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1884,7 +2056,7 @@
       </field>
       <field>
         <name>price</name>
-        <type>Integer</type>
+        <type>String</type>
         <format>#</format>
         <currency>£</currency>
         <decimal>.</decimal>
@@ -1953,74 +2125,6 @@
     </GUI>
   </step>
   <step>
-    <name>Select useful columns 4</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>app_id</name>
-        <rename/>
-      </field>
-      <field>
-        <name>concurrent_users_yesterday</name>
-        <rename/>
-      </field>
-      <field>
-        <name>playtime_average_forever</name>
-        <rename/>
-      </field>
-      <field>
-        <name>playtime_average_2weeks</name>
-        <rename/>
-      </field>
-      <field>
-        <name>playtime_median_forever</name>
-        <rename/>
-      </field>
-      <field>
-        <name>playtime_median_2weeks</name>
-        <rename/>
-      </field>
-      <field>
-        <name>price</name>
-        <rename/>
-      </field>
-      <field>
-        <name>initial_price</name>
-        <rename/>
-      </field>
-      <field>
-        <name>discount</name>
-        <rename/>
-      </field>
-      <field>
-        <name>genres</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Table output</name>
     <type>TableOutput</type>
     <description/>
@@ -2031,14 +2135,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
+    <connection>MySQL Steam Database</connection>
     <schema/>
-    <table/>
+    <table>stg_dataset1</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
+    <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
@@ -2049,6 +2153,110 @@
     <return_keys>N</return_keys>
     <return_field/>
     <fields>
+      <field>
+        <column_name>AppID</column_name>
+        <stream_name>AppID</stream_name>
+      </field>
+      <field>
+        <column_name>Name</column_name>
+        <stream_name>Name</stream_name>
+      </field>
+      <field>
+        <column_name>Price</column_name>
+        <stream_name>Price</stream_name>
+      </field>
+      <field>
+        <column_name>Discount</column_name>
+        <stream_name>Discount</stream_name>
+      </field>
+      <field>
+        <column_name>Windows</column_name>
+        <stream_name>Windows</stream_name>
+      </field>
+      <field>
+        <column_name>Mac</column_name>
+        <stream_name>Mac</stream_name>
+      </field>
+      <field>
+        <column_name>Linux</column_name>
+        <stream_name>Linux</stream_name>
+      </field>
+      <field>
+        <column_name>Positive</column_name>
+        <stream_name>Positive</stream_name>
+      </field>
+      <field>
+        <column_name>Negative</column_name>
+        <stream_name>Negative</stream_name>
+      </field>
+      <field>
+        <column_name>Achievements</column_name>
+        <stream_name>Achievements</stream_name>
+      </field>
+      <field>
+        <column_name>Recommendations</column_name>
+        <stream_name>Recommendations</stream_name>
+      </field>
+      <field>
+        <column_name>Categories</column_name>
+        <stream_name>Categories</stream_name>
+      </field>
+      <field>
+        <column_name>Genres</column_name>
+        <stream_name>Genres</stream_name>
+      </field>
+      <field>
+        <column_name>Tags</column_name>
+        <stream_name>Tags</stream_name>
+      </field>
+      <field>
+        <column_name>Release_date</column_name>
+        <stream_name>parsed_date</stream_name>
+      </field>
+      <field>
+        <column_name>Estimated_owners</column_name>
+        <stream_name>Estimated owners</stream_name>
+      </field>
+      <field>
+        <column_name>Peak_CCU</column_name>
+        <stream_name>Peak CCU</stream_name>
+      </field>
+      <field>
+        <column_name>Required_age</column_name>
+        <stream_name>Required age</stream_name>
+      </field>
+      <field>
+        <column_name>DLC_count</column_name>
+        <stream_name>DLC count</stream_name>
+      </field>
+      <field>
+        <column_name>Header_image</column_name>
+        <stream_name>Header image</stream_name>
+      </field>
+      <field>
+        <column_name>Metacritic_score</column_name>
+        <stream_name>Metacritic score</stream_name>
+      </field>
+      <field>
+        <column_name>User_score</column_name>
+        <stream_name>User score</stream_name>
+      </field>
+      <field>
+        <column_name>Average_playtime_forever</column_name>
+        <stream_name>Average playtime forever</stream_name>
+      </field>
+      <field>
+        <column_name>Average_playtime_2weeks</column_name>
+        <stream_name>Average playtime two weeks</stream_name>
+      </field>
+      <field>
+        <column_name>Median_playtime_forever</column_name>
+        <stream_name>Median playtime forever</stream_name>
+      </field>
+      <field>
+        <column_name>Median_playtime_2weeks</column_name>
+        <stream_name>Median playtime two weeks</stream_name>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -2059,7 +2267,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>768</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -2075,14 +2283,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
+    <connection>MySQL Steam Database</connection>
     <schema/>
-    <table/>
+    <table>stg_dataset2_games</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
+    <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
@@ -2093,6 +2301,18 @@
     <return_keys>N</return_keys>
     <return_field/>
     <fields>
+      <field>
+        <column_name>app_id</column_name>
+        <stream_name>app_id</stream_name>
+      </field>
+      <field>
+        <column_name>name</column_name>
+        <stream_name>name</stream_name>
+      </field>
+      <field>
+        <column_name>languages</column_name>
+        <stream_name>languages</stream_name>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -2103,7 +2323,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>768</xloc>
       <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
@@ -2119,14 +2339,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
+    <connection>MySQL Steam Database</connection>
     <schema/>
-    <table/>
+    <table>stg_dataset2_reviews</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
+    <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
@@ -2137,6 +2357,38 @@
     <return_keys>N</return_keys>
     <return_field/>
     <fields>
+      <field>
+        <column_name>app_id</column_name>
+        <stream_name>app_id</stream_name>
+      </field>
+      <field>
+        <column_name>positive</column_name>
+        <stream_name>positive</stream_name>
+      </field>
+      <field>
+        <column_name>negative</column_name>
+        <stream_name>negative</stream_name>
+      </field>
+      <field>
+        <column_name>total</column_name>
+        <stream_name>total</stream_name>
+      </field>
+      <field>
+        <column_name>recommendations</column_name>
+        <stream_name>recommendations</stream_name>
+      </field>
+      <field>
+        <column_name>steamspy_user_score</column_name>
+        <stream_name>steamspy_user_score</stream_name>
+      </field>
+      <field>
+        <column_name>steamspy_positive</column_name>
+        <stream_name>steamspy_positive</stream_name>
+      </field>
+      <field>
+        <column_name>steamspy_negative</column_name>
+        <stream_name>steamspy_negative</stream_name>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -2147,7 +2399,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>768</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -2163,14 +2415,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection/>
+    <connection>MySQL Steam Database</connection>
     <schema/>
-    <table/>
+    <table>stg_dataset2_steamspy</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
-    <specify_fields>N</specify_fields>
+    <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
     <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
@@ -2181,6 +2433,26 @@
     <return_keys>N</return_keys>
     <return_field/>
     <fields>
+      <field>
+        <column_name>app_id</column_name>
+        <stream_name>app_id</stream_name>
+      </field>
+      <field>
+        <column_name>price</column_name>
+        <stream_name>price</stream_name>
+      </field>
+      <field>
+        <column_name>initial_price</column_name>
+        <stream_name>initial_price</stream_name>
+      </field>
+      <field>
+        <column_name>discount</column_name>
+        <stream_name>discount</stream_name>
+      </field>
+      <field>
+        <column_name>genres</column_name>
+        <stream_name>genres</stream_name>
+      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -2191,7 +2463,51 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>768</xloc>
+      <yloc>464</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter out incorrect rows 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select useful columns 4</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>price</leftvalue>
+        <function>REGEXP</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>^[0-9]*$</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask>#</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
       <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
