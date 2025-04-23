@@ -29,8 +29,7 @@ CREATE TABLE stg_dataset1 (
 
 CREATE TABLE stg_dataset2_games (
     app_id INT,
-    name VARCHAR(512),
-    languages TEXT
+    name VARCHAR(512)
 );
 
 CREATE TABLE stg_dataset2_reviews (

@@ -512,16 +512,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Reviews CSV file input</from>
-      <to>Filter out incorrect rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filter out incorrect rows</from>
-      <to>Select useful columns 3</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Select useful columns</from>
       <to>Parse Date JavaScript</to>
       <enabled>Y</enabled>
@@ -537,11 +527,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Select useful columns 3</from>
-      <to>Table output 3</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Select useful columns 4</from>
       <to>Table output 4</to>
       <enabled>Y</enabled>
@@ -554,6 +539,26 @@
     <hop>
       <from>Filter out incorrect rows 2</from>
       <to>Select useful columns 4</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Reviews CSV file input</from>
+      <to>Filter rows</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter rows</from>
+      <to>Select useful columns 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Select useful columns 3</from>
+      <to>Replace in string</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Replace in string</from>
+      <to>Table output 3</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1164,7 +1169,7 @@
     </GUI>
   </step>
   <step>
-    <name>Filter out incorrect rows</name>
+    <name>Filter out incorrect rows 2</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -1174,7 +1179,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Select useful columns 3</send_true_to>
+    <send_true_to>Select useful columns 4</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
@@ -1182,7 +1187,7 @@
         <conditions>
           <condition>
             <negated>N</negated>
-            <leftvalue>app_id</leftvalue>
+            <leftvalue>price</leftvalue>
             <function>REGEXP</function>
             <rightvalue/>
             <value>
@@ -1192,67 +1197,19 @@
               <length>-1</length>
               <precision>-1</precision>
               <isnull>N</isnull>
-              <mask/>
+              <mask>#</mask>
             </value>
           </condition>
           <condition>
             <negated>N</negated>
             <operator>AND</operator>
-            <leftvalue>review_score</leftvalue>
-            <function>REGEXP</function>
+            <leftvalue>price</leftvalue>
+            <function>&gt;</function>
             <rightvalue/>
             <value>
               <name>constant</name>
               <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>metacritic_score</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>recommendations</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
-              <length>-1</length>
-              <precision>-1</precision>
-              <isnull>N</isnull>
-              <mask/>
-            </value>
-          </condition>
-          <condition>
-            <negated>N</negated>
-            <operator>AND</operator>
-            <leftvalue>steamspy_user_score</leftvalue>
-            <function>REGEXP</function>
-            <rightvalue/>
-            <value>
-              <name>constant</name>
-              <type>String</type>
-              <text>^[0-9]*$</text>
+              <text>0</text>
               <length>-1</length>
               <precision>-1</precision>
               <isnull>N</isnull>
@@ -1272,6 +1229,50 @@
     </remotesteps>
     <GUI>
       <xloc>272</xloc>
+      <yloc>464</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Select useful columns 3</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>app_id</leftvalue>
+        <function>REGEXP</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>^[0-9]*$</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>240</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1452,10 +1453,121 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     </GUI>
   </step>
   <step>
+    <name>Replace in string</name>
+    <type>ReplaceString</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>positive</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>negative</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>total</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>recommendations</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>steamspy_user_score</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>steamspy_positive</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>steamspy_negative</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string>\N</replace_string>
+        <replace_by_string>0</replace_by_string>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>576</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Reviews CSV file input</name>
     <type>CsvInput</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -1470,10 +1582,10 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <enclosure>"</enclosure>
     <header>Y</header>
     <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
+    <lazy_conversion>N</lazy_conversion>
     <add_filename_result>N</add_filename_result>
     <parallel>N</parallel>
-    <newline_possible>Y</newline_possible>
+    <newline_possible>N</newline_possible>
     <format>mixed</format>
     <encoding/>
     <fields>
@@ -1649,11 +1761,9 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <fields>
       <field>
         <name>AppID</name>
-        <rename/>
       </field>
       <field>
         <name>Name</name>
-        <rename/>
       </field>
       <field>
         <name>Release date</name>
@@ -1661,95 +1771,72 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
       </field>
       <field>
         <name>Estimated owners</name>
-        <rename/>
       </field>
       <field>
         <name>Peak CCU</name>
-        <rename/>
       </field>
       <field>
         <name>Required age</name>
-        <rename/>
       </field>
       <field>
         <name>Price</name>
-        <rename/>
       </field>
       <field>
         <name>Discount</name>
-        <rename/>
       </field>
       <field>
         <name>DLC count</name>
-        <rename/>
       </field>
       <field>
         <name>Header image</name>
-        <rename/>
       </field>
       <field>
         <name>Windows</name>
-        <rename/>
       </field>
       <field>
         <name>Mac</name>
-        <rename/>
       </field>
       <field>
         <name>Linux</name>
-        <rename/>
       </field>
       <field>
         <name>Metacritic score</name>
-        <rename/>
       </field>
       <field>
         <name>User score</name>
-        <rename/>
       </field>
       <field>
         <name>Positive</name>
-        <rename/>
       </field>
       <field>
         <name>Negative</name>
-        <rename/>
       </field>
       <field>
         <name>Achievements</name>
-        <rename/>
       </field>
       <field>
         <name>Recommendations</name>
-        <rename/>
       </field>
       <field>
         <name>Average playtime forever</name>
-        <rename/>
       </field>
       <field>
         <name>Average playtime two weeks</name>
-        <rename/>
       </field>
       <field>
         <name>Median playtime forever</name>
-        <rename/>
       </field>
       <field>
         <name>Median playtime two weeks</name>
-        <rename/>
       </field>
       <field>
         <name>Categories</name>
-        <rename/>
       </field>
       <field>
         <name>Genres</name>
-        <rename/>
       </field>
       <field>
         <name>Tags</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1781,12 +1868,11 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <fields>
       <field>
         <name>app_id</name>
+        <rename/>
       </field>
       <field>
         <name>name</name>
-      </field>
-      <field>
-        <name>languages</name>
+        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1818,35 +1904,27 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <fields>
       <field>
         <name>app_id</name>
-        <rename/>
       </field>
       <field>
         <name>positive</name>
-        <rename/>
       </field>
       <field>
         <name>negative</name>
-        <rename/>
       </field>
       <field>
         <name>total</name>
-        <rename/>
       </field>
       <field>
         <name>recommendations</name>
-        <rename/>
       </field>
       <field>
         <name>steamspy_user_score</name>
-        <rename/>
       </field>
       <field>
         <name>steamspy_positive</name>
-        <rename/>
       </field>
       <field>
         <name>steamspy_negative</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1859,7 +1937,7 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
+      <xloc>384</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1878,23 +1956,18 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <fields>
       <field>
         <name>app_id</name>
-        <rename/>
       </field>
       <field>
         <name>price</name>
-        <rename/>
       </field>
       <field>
         <name>initial_price</name>
-        <rename/>
       </field>
       <field>
         <name>discount</name>
-        <rename/>
       </field>
       <field>
         <name>genres</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>
@@ -2309,10 +2382,6 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
         <column_name>name</column_name>
         <stream_name>name</stream_name>
       </field>
-      <field>
-        <column_name>languages</column_name>
-        <stream_name>languages</stream_name>
-      </field>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -2464,50 +2533,6 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     </remotesteps>
     <GUI>
       <xloc>768</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter out incorrect rows 2</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Select useful columns 4</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>price</leftvalue>
-        <function>REGEXP</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>^[0-9]*$</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask>#</mask>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>272</xloc>
       <yloc>464</yloc>
       <draw>Y</draw>
     </GUI>
