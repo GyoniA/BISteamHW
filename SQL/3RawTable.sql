@@ -23,5 +23,6 @@ CREATE TABLE raw_games (
     Genres TEXT,
     Tags TEXT,
     steamspy_positive INT,
-    steamspy_negative INT
+    steamspy_negative INT,
+    Estimated_Revenue INT
 );
