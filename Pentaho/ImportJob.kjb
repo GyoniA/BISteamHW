@@ -4,6 +4,7 @@
   <description/>
   <extended_description/>
   <job_version/>
+  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2025/04/23 13:16:29.224</created_date>
@@ -380,7 +381,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>512</xloc>
+      <xloc>496</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -418,7 +419,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>704</xloc>
+      <xloc>720</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>
@@ -430,7 +431,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>864</xloc>
+      <xloc>880</xloc>
       <yloc>208</yloc>
       <attributes_kjc/>
     </entry>

@@ -6,6 +6,7 @@
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -543,6 +544,11 @@
     </hop>
     <hop>
       <from>Filter out Null rows</from>
+      <to>Filter Release Date</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filter Release Date</from>
       <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
@@ -587,7 +593,7 @@
 , Genres
 , Tags
 FROM stg_dataset1
-</sql>
+WHERE Release_date &lt; '2012-12-31'</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -602,7 +608,7 @@ FROM stg_dataset1
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
+      <xloc>80</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -643,7 +649,86 @@ FROM stg_dataset1
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
+      <xloc>704</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter Release Date</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Table output</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>Release_date</leftvalue>
+        <function>&lt;=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>Date</type>
+          <text>2018/01/01 00:00:00.000</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask>yyyy/MM/dd HH:mm:ss</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>912</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter out Null rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Filter Release Date</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>AppID</leftvalue>
+        <function>IS NOT NULL</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>800</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -679,7 +764,7 @@ FROM stg_dataset2_games
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
+      <xloc>80</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -721,7 +806,7 @@ FROM stg_dataset2_reviews
       </output>
     </remotesteps>
     <GUI>
-      <xloc>224</xloc>
+      <xloc>80</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -799,7 +884,7 @@ FROM stg_dataset2_reviews
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
+      <xloc>240</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -841,7 +926,7 @@ FROM stg_dataset2_reviews
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>224</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -883,7 +968,7 @@ FROM stg_dataset2_reviews
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>512</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -922,7 +1007,7 @@ FROM stg_dataset2_steamspy
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
+      <xloc>240</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -982,7 +1067,7 @@ FROM stg_dataset2_steamspy
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
+      <xloc>416</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1084,7 +1169,7 @@ FROM stg_dataset2_steamspy
       </output>
     </remotesteps>
     <GUI>
-      <xloc>736</xloc>
+      <xloc>592</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1233,41 +1318,6 @@ FROM stg_dataset2_steamspy
     </remotesteps>
     <GUI>
       <xloc>1040</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter out Null rows</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Table output</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>AppID</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>944</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>

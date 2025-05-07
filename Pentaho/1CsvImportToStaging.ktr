@@ -6,6 +6,7 @@
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -517,11 +518,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Parse Date JavaScript</from>
-      <to>Table output</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Select useful columns 2</from>
       <to>Table output 2</to>
       <enabled>Y</enabled>
@@ -559,6 +555,11 @@
     <hop>
       <from>Replace in string</from>
       <to>Table output 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Parse Date JavaScript</from>
+      <to>Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -1868,11 +1869,9 @@ if (date_str.match(/^[A-Za-z]{3} \d{1,2}, \d{4}$/)) {
     <fields>
       <field>
         <name>app_id</name>
-        <rename/>
       </field>
       <field>
         <name>name</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
