@@ -493,94 +493,10 @@
   <order>
     <hop>
       <from>Table input</from>
-      <to>Fact Table output</to>
+      <to>Insert / update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>Fact Table output</name>
-    <type>TableOutput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <schema/>
-    <table>fact_game_metrics</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>AppID</column_name>
-        <stream_name>AppID</stream_name>
-      </field>
-      <field>
-        <column_name>Metacritic_score</column_name>
-        <stream_name>Metacritic_score</stream_name>
-      </field>
-      <field>
-        <column_name>User_score</column_name>
-        <stream_name>User_score</stream_name>
-      </field>
-      <field>
-        <column_name>Positive</column_name>
-        <stream_name>Positive</stream_name>
-      </field>
-      <field>
-        <column_name>Negative</column_name>
-        <stream_name>Negative</stream_name>
-      </field>
-      <field>
-        <column_name>Achievements</column_name>
-        <stream_name>Achievements</stream_name>
-      </field>
-      <field>
-        <column_name>Recommendations</column_name>
-        <stream_name>Recommendations</stream_name>
-      </field>
-      <field>
-        <column_name>Median_playtime_forever</column_name>
-        <stream_name>Median_playtime_forever</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_positive</column_name>
-        <stream_name>steamspy_positive</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_negative</column_name>
-        <stream_name>steamspy_negative</stream_name>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Table input</name>
     <type>TableInput</type>
@@ -637,6 +553,94 @@ FROM raw_games
     </remotesteps>
     <GUI>
       <xloc>352</xloc>
+      <yloc>128</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insert / update</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MySQL Steam Database</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>fact_game_metrics</table>
+      <key>
+        <name>AppID</name>
+        <field>AppID</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>AppID</name>
+        <rename>AppID</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Metacritic_score</name>
+        <rename>Metacritic_score</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>User_score</name>
+        <rename>User_score</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Positive</name>
+        <rename>Positive</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Negative</name>
+        <rename>Negative</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Achievements</name>
+        <rename>Achievements</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Recommendations</name>
+        <rename>Recommendations</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Median_playtime_forever</name>
+        <rename>Median_playtime_forever</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>steamspy_positive</name>
+        <rename>steamspy_positive</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>steamspy_negative</name>
+        <rename>steamspy_negative</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>

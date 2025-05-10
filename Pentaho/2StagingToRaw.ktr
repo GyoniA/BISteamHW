@@ -544,7 +544,7 @@
     </hop>
     <hop>
       <from>Filter out Null rows</from>
-      <to>Table output</to>
+      <to>Insert / update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -660,7 +660,7 @@ WHERE Release_date &lt; '2012-12-31'</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Table output</send_true_to>
+    <send_true_to>Insert / update</send_true_to>
     <send_false_to/>
     <compare>
       <condition>
@@ -1126,8 +1126,8 @@ FROM stg_dataset2_steamspy
     </GUI>
   </step>
   <step>
-    <name>Table output</name>
-    <type>TableOutput</type>
+    <name>Insert / update</name>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1137,128 +1137,143 @@ FROM stg_dataset2_steamspy
       <schema_name/>
     </partitioning>
     <connection>MySQL Steam Database</connection>
-    <schema/>
-    <table>raw_games</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>AppID</column_name>
-        <stream_name>AppID</stream_name>
-      </field>
-      <field>
-        <column_name>Name</column_name>
-        <stream_name>Name</stream_name>
-      </field>
-      <field>
-        <column_name>Release_date</column_name>
-        <stream_name>Release_date</stream_name>
-      </field>
-      <field>
-        <column_name>Estimated_owners</column_name>
-        <stream_name>Estimated_owners</stream_name>
-      </field>
-      <field>
-        <column_name>Peak_CCU</column_name>
-        <stream_name>Peak_CCU</stream_name>
-      </field>
-      <field>
-        <column_name>Required_age</column_name>
-        <stream_name>Required_age</stream_name>
-      </field>
-      <field>
-        <column_name>Price</column_name>
-        <stream_name>Price</stream_name>
-      </field>
-      <field>
-        <column_name>Discount</column_name>
-        <stream_name>Discount</stream_name>
-      </field>
-      <field>
-        <column_name>DLC_count</column_name>
-        <stream_name>DLC_count</stream_name>
-      </field>
-      <field>
-        <column_name>Header_image</column_name>
-        <stream_name>Header_image</stream_name>
-      </field>
-      <field>
-        <column_name>Windows</column_name>
-        <stream_name>Windows</stream_name>
-      </field>
-      <field>
-        <column_name>Mac</column_name>
-        <stream_name>Mac</stream_name>
-      </field>
-      <field>
-        <column_name>Linux</column_name>
-        <stream_name>Linux</stream_name>
-      </field>
-      <field>
-        <column_name>Metacritic_score</column_name>
-        <stream_name>Metacritic_score</stream_name>
-      </field>
-      <field>
-        <column_name>User_score</column_name>
-        <stream_name>User_score</stream_name>
-      </field>
-      <field>
-        <column_name>Positive</column_name>
-        <stream_name>Positive</stream_name>
-      </field>
-      <field>
-        <column_name>Negative</column_name>
-        <stream_name>Negative</stream_name>
-      </field>
-      <field>
-        <column_name>Achievements</column_name>
-        <stream_name>Achievements</stream_name>
-      </field>
-      <field>
-        <column_name>Recommendations</column_name>
-        <stream_name>Recommendations</stream_name>
-      </field>
-      <field>
-        <column_name>Median_playtime_forever</column_name>
-        <stream_name>Median_playtime_forever</stream_name>
-      </field>
-      <field>
-        <column_name>Categories</column_name>
-        <stream_name>Categories</stream_name>
-      </field>
-      <field>
-        <column_name>Genres</column_name>
-        <stream_name>Genres</stream_name>
-      </field>
-      <field>
-        <column_name>Tags</column_name>
-        <stream_name>Tags</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_positive</column_name>
-        <stream_name>steamspy_positive</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_negative</column_name>
-        <stream_name>steamspy_negative</stream_name>
-      </field>
-      <field>
-        <column_name>Estimated_Revenue</column_name>
-        <stream_name>Estimated_Revenue</stream_name>
-      </field>
-    </fields>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>raw_games</table>
+      <key>
+        <name>AppID</name>
+        <field>AppID</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>AppID</name>
+        <rename>AppID</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Name</name>
+        <rename>Name</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Release_date</name>
+        <rename>Release_date</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Estimated_owners</name>
+        <rename>Estimated_owners</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Peak_CCU</name>
+        <rename>Peak_CCU</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Required_age</name>
+        <rename>Required_age</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Price</name>
+        <rename>Price</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Discount</name>
+        <rename>Discount</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>DLC_count</name>
+        <rename>DLC_count</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Header_image</name>
+        <rename>Header_image</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Windows</name>
+        <rename>Windows</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Mac</name>
+        <rename>Mac</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Linux</name>
+        <rename>Linux</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Metacritic_score</name>
+        <rename>Metacritic_score</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>User_score</name>
+        <rename>User_score</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Positive</name>
+        <rename>Positive</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Negative</name>
+        <rename>Negative</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Achievements</name>
+        <rename>Achievements</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Recommendations</name>
+        <rename>Recommendations</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Median_playtime_forever</name>
+        <rename>Median_playtime_forever</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Categories</name>
+        <rename>Categories</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Genres</name>
+        <rename>Genres</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>Tags</name>
+        <rename>Tags</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>steamspy_positive</name>
+        <rename>steamspy_positive</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>steamspy_negative</name>
+        <rename>steamspy_negative</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1268,7 +1283,7 @@ FROM stg_dataset2_steamspy
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1040</xloc>
+      <xloc>1008</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
