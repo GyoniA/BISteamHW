@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>2StagingToRaw</name>
+    <name>3RawToFactAndDimension</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,9 +427,9 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2025/04/16 16:30:41.244</created_date>
+    <created_date>2025/04/23 12:09:12.533</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2025/04/16 16:30:41.244</modified_date>
+    <modified_date>2025/04/23 12:09:12.533</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
@@ -493,640 +492,13 @@
   </connection>
   <order>
     <hop>
-      <from>Games Table input</from>
-      <to>Reviews lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Reviews Table input</from>
-      <to>Reviews lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Reviews lookup</from>
-      <to>SteamSpy lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>SteamSpy Table input</from>
-      <to>SteamSpy lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>1st Dataset Table input</from>
-      <to>Sort rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>SteamSpy lookup</from>
-      <to>Sort rows 2</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Sort rows</from>
-      <to>Stream lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Sort rows 2</from>
-      <to>Stream lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Stream lookup</from>
-      <to>Calculator</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Calculator</from>
-      <to>Filter out Null rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filter out Null rows</from>
-      <to>Table output</to>
+      <from>Table input</from>
+      <to>Dimension Table output</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>1st Dataset Table input</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <sql>SELECT
-  AppID
-, Name
-, Release_date
-, Estimated_owners
-, Peak_CCU
-, Required_age
-, Price
-, Discount
-, DLC_count
-, Header_image
-, Windows
-, Mac
-, Linux
-, Metacritic_score
-, User_score
-, Positive
-, Negative
-, Achievements
-, Recommendations
-, Average_playtime_forever
-, Average_playtime_2weeks
-, Median_playtime_forever
-, Median_playtime_2weeks
-, Categories
-, Genres
-, Tags
-FROM stg_dataset1
-WHERE Release_date &lt; '2012-12-31'</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Calculator</name>
-    <type>Calculator</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <failIfNoFile>Y</failIfNoFile>
-    <calculation>
-      <field_name>Estimated_Revenue</field_name>
-      <calc_type>MULTIPLY</calc_type>
-      <field_a>Peak_CCU</field_a>
-      <field_b>Price</field_b>
-      <field_c/>
-      <value_type>Number</value_type>
-      <value_length>-1</value_length>
-      <value_precision>-1</value_precision>
-      <remove>N</remove>
-      <conversion_mask/>
-      <decimal_symbol/>
-      <grouping_symbol/>
-      <currency_symbol/>
-    </calculation>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filter out Null rows</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Table output</send_true_to>
-    <send_false_to/>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>AppID</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Games Table input</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <sql>SELECT
-  app_id
-, name
-FROM stg_dataset2_games
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Reviews Table input</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <sql>SELECT
-  app_id
-, positive
-, negative
-, total
-, recommendations
-, steamspy_user_score
-, steamspy_positive
-, steamspy_negative
-FROM stg_dataset2_reviews
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>80</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Reviews lookup</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>Reviews Table input</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>app_id</name>
-        <field>app_id</field>
-      </key>
-      <value>
-        <name>positive</name>
-        <rename>positive</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>negative</name>
-        <rename>negative</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>total</name>
-        <rename>total</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>recommendations</name>
-        <rename>recommendations</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>steamspy_user_score</name>
-        <rename>steamspy_user_score</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>steamspy_positive</name>
-        <rename>steamspy_positive</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>steamspy_negative</name>
-        <rename>steamspy_negative</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort rows</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>AppID</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>224</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sort rows 2</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>app_id</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>512</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>SteamSpy Table input</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <sql>SELECT
-  app_id
-, price
-, initial_price
-, discount
-, genres
-FROM stg_dataset2_steamspy
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>240</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>SteamSpy lookup</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>SteamSpy Table input</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>app_id</name>
-        <field>app_id</field>
-      </key>
-      <value>
-        <name>price</name>
-        <rename>price</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>initial_price</name>
-        <rename>initial_price</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>discount</name>
-        <rename>discount</rename>
-        <default>0.0</default>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>genres</name>
-        <rename>genres</rename>
-        <default/>
-        <type>String</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>416</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Stream lookup</name>
-    <type>StreamLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <from>Sort rows 2</from>
-    <input_sorted>N</input_sorted>
-    <preserve_memory>Y</preserve_memory>
-    <sorted_list>N</sorted_list>
-    <integer_pair>N</integer_pair>
-    <lookup>
-      <key>
-        <name>AppID</name>
-        <field>app_id</field>
-      </key>
-      <value>
-        <name>positive</name>
-        <rename>positive</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>negative</name>
-        <rename>negative</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>total</name>
-        <rename>total</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>recommendations</name>
-        <rename>recommendations</rename>
-        <default/>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>steamspy_user_score</name>
-        <rename>steamspy_user_score</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>steamspy_positive</name>
-        <rename>steamspy_positive</rename>
-        <default>3</default>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>steamspy_negative</name>
-        <rename>steamspy_negative</rename>
-        <default>1</default>
-        <type>Integer</type>
-      </value>
-      <value>
-        <name>price</name>
-        <rename>price</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>initial_price</name>
-        <rename>initial_price</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>discount</name>
-        <rename>discount</rename>
-        <default/>
-        <type>Number</type>
-      </value>
-      <value>
-        <name>genres</name>
-        <rename>genres</rename>
-        <default/>
-        <type>String</type>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>592</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Table output</name>
+    <name>Dimension Table output</name>
     <type>TableOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1138,7 +510,7 @@ FROM stg_dataset2_steamspy
     </partitioning>
     <connection>MySQL Steam Database</connection>
     <schema/>
-    <table>raw_games</table>
+    <table>dim_game</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -1207,34 +579,6 @@ FROM stg_dataset2_steamspy
         <stream_name>Linux</stream_name>
       </field>
       <field>
-        <column_name>Metacritic_score</column_name>
-        <stream_name>Metacritic_score</stream_name>
-      </field>
-      <field>
-        <column_name>User_score</column_name>
-        <stream_name>User_score</stream_name>
-      </field>
-      <field>
-        <column_name>Positive</column_name>
-        <stream_name>Positive</stream_name>
-      </field>
-      <field>
-        <column_name>Negative</column_name>
-        <stream_name>Negative</stream_name>
-      </field>
-      <field>
-        <column_name>Achievements</column_name>
-        <stream_name>Achievements</stream_name>
-      </field>
-      <field>
-        <column_name>Recommendations</column_name>
-        <stream_name>Recommendations</stream_name>
-      </field>
-      <field>
-        <column_name>Median_playtime_forever</column_name>
-        <stream_name>Median_playtime_forever</stream_name>
-      </field>
-      <field>
         <column_name>Categories</column_name>
         <stream_name>Categories</stream_name>
       </field>
@@ -1245,14 +589,6 @@ FROM stg_dataset2_steamspy
       <field>
         <column_name>Tags</column_name>
         <stream_name>Tags</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_positive</column_name>
-        <stream_name>steamspy_positive</stream_name>
-      </field>
-      <field>
-        <column_name>steamspy_negative</column_name>
-        <stream_name>steamspy_negative</stream_name>
       </field>
       <field>
         <column_name>Estimated_Revenue</column_name>
@@ -1268,7 +604,67 @@ FROM stg_dataset2_steamspy
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1040</xloc>
+      <xloc>416</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MySQL Steam Database</connection>
+    <sql>SELECT
+  AppID
+, Name
+, Release_date
+, Estimated_owners
+, Peak_CCU
+, Required_age
+, Price
+, Discount
+, DLC_count
+, Header_image
+, Windows
+, Mac
+, Linux
+, Metacritic_score
+, User_score
+, Positive
+, Negative
+, Achievements
+, Recommendations
+, Median_playtime_forever
+, Categories
+, Genres
+, Tags
+, steamspy_positive
+, steamspy_negative
+, Estimated_Revenue
+FROM raw_games
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
       <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>3RawToFactAndDimension</name>
+    <name>4RawToFact</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,10 +427,10 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2025/04/23 12:09:12.533</created_date>
+    <created_date>2025/05/10 14:31:17.088</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2025/04/23 12:09:12.533</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2025/05/10 14:31:17.088</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -493,105 +493,10 @@
   <order>
     <hop>
       <from>Table input</from>
-      <to>Copy rows to result</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Copy rows to result</from>
       <to>Fact Table output</to>
       <enabled>Y</enabled>
     </hop>
-    <hop>
-      <from>Copy rows to result</from>
-      <to>Dimension Table output</to>
-      <enabled>Y</enabled>
-    </hop>
   </order>
-  <step>
-    <name>Table input</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL Steam Database</connection>
-    <sql>SELECT
-  AppID
-, Name
-, Release_date
-, Estimated_owners
-, Peak_CCU
-, Required_age
-, Price
-, Discount
-, DLC_count
-, Header_image
-, Windows
-, Mac
-, Linux
-, Metacritic_score
-, User_score
-, Positive
-, Negative
-, Achievements
-, Recommendations
-, Median_playtime_forever
-, Categories
-, Genres
-, Tags
-, steamspy_positive
-, steamspy_negative
-, Estimated_Revenue
-FROM raw_games
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Copy rows to result</name>
-    <type>RowsToResult</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Fact Table output</name>
     <type>TableOutput</type>
@@ -671,14 +576,14 @@ FROM raw_games
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
-      <yloc>112</yloc>
+      <xloc>608</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Dimension Table output</name>
-    <type>TableOutput</type>
+    <name>Table input</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -688,92 +593,40 @@ FROM raw_games
       <schema_name/>
     </partitioning>
     <connection>MySQL Steam Database</connection>
-    <schema/>
-    <table>dim_game</table>
-    <commit>1000</commit>
-    <truncate>N</truncate>
-    <ignore_errors>N</ignore_errors>
-    <use_batch>Y</use_batch>
-    <specify_fields>Y</specify_fields>
-    <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field/>
-    <partitioning_daily>N</partitioning_daily>
-    <partitioning_monthly>Y</partitioning_monthly>
-    <tablename_in_field>N</tablename_in_field>
-    <tablename_field/>
-    <tablename_in_table>Y</tablename_in_table>
-    <return_keys>N</return_keys>
-    <return_field/>
-    <fields>
-      <field>
-        <column_name>AppID</column_name>
-        <stream_name>AppID</stream_name>
-      </field>
-      <field>
-        <column_name>Name</column_name>
-        <stream_name>Name</stream_name>
-      </field>
-      <field>
-        <column_name>Release_date</column_name>
-        <stream_name>Release_date</stream_name>
-      </field>
-      <field>
-        <column_name>Estimated_owners</column_name>
-        <stream_name>Estimated_owners</stream_name>
-      </field>
-      <field>
-        <column_name>Peak_CCU</column_name>
-        <stream_name>Peak_CCU</stream_name>
-      </field>
-      <field>
-        <column_name>Required_age</column_name>
-        <stream_name>Required_age</stream_name>
-      </field>
-      <field>
-        <column_name>Price</column_name>
-        <stream_name>Price</stream_name>
-      </field>
-      <field>
-        <column_name>Discount</column_name>
-        <stream_name>Discount</stream_name>
-      </field>
-      <field>
-        <column_name>DLC_count</column_name>
-        <stream_name>DLC_count</stream_name>
-      </field>
-      <field>
-        <column_name>Header_image</column_name>
-        <stream_name>Header_image</stream_name>
-      </field>
-      <field>
-        <column_name>Windows</column_name>
-        <stream_name>Windows</stream_name>
-      </field>
-      <field>
-        <column_name>Mac</column_name>
-        <stream_name>Mac</stream_name>
-      </field>
-      <field>
-        <column_name>Linux</column_name>
-        <stream_name>Linux</stream_name>
-      </field>
-      <field>
-        <column_name>Categories</column_name>
-        <stream_name>Categories</stream_name>
-      </field>
-      <field>
-        <column_name>Genres</column_name>
-        <stream_name>Genres</stream_name>
-      </field>
-      <field>
-        <column_name>Tags</column_name>
-        <stream_name>Tags</stream_name>
-      </field>
-      <field>
-        <column_name>Estimated_Revenue</column_name>
-        <stream_name>Estimated_Revenue</stream_name>
-      </field>
-    </fields>
+    <sql>SELECT
+  AppID
+, Name
+, Release_date
+, Estimated_owners
+, Peak_CCU
+, Required_age
+, Price
+, Discount
+, DLC_count
+, Header_image
+, Windows
+, Mac
+, Linux
+, Metacritic_score
+, User_score
+, Positive
+, Negative
+, Achievements
+, Recommendations
+, Median_playtime_forever
+, Categories
+, Genres
+, Tags
+, steamspy_positive
+, steamspy_negative
+, Estimated_Revenue
+FROM raw_games
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -783,8 +636,8 @@ FROM raw_games
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
-      <yloc>208</yloc>
+      <xloc>352</xloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
