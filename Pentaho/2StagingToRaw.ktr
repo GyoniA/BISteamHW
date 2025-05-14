@@ -588,7 +588,7 @@
 , Genres
 , Tags
 FROM stg_dataset1
-WHERE Release_date &lt; '2016-12-31'</sql>
+WHERE Release_date &lt; '2024-12-31'</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
